@@ -1,0 +1,24 @@
+// operatory arytmetyczne
+PLUS = '+';
+MINUS = '-';
+MUL = '*';
+DIV = '/';
+MOD = '%';
+EXP = '^';
+
+// operatory porównywania (relacji)
+EQUALS = '=';
+NEQUALS = '!=';
+GREATER = '>';
+LESSER = '<';
+NGREATER = '<=';
+NLESSER = '>=';
+
+// funkcje
+ABS = '||';
+SIN = 'sin';
+COS = 'cos';
+
+
+
+
