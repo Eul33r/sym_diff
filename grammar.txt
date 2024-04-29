@@ -14,10 +14,12 @@ primary ::= number
           | variable
           | function_call
           | LPAREN expression RPAREN
-          | ABS LPAREN expression RPAREN
-
+         
 function_call ::= SIN LPAREN expression RPAREN
                 | COS LPAREN expression RPAREN
+                | ABS PIPE expression PIPE;
+
+                
 
 number ::= INTEGER
          | FLOAT
