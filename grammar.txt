@@ -1,0 +1,27 @@
+expression ::= term
+             | expression PLUS term
+             | expression MINUS term
+
+term ::= factor
+       | term MUL factor
+       | term DIV factor
+       | term MOD factor
+
+factor ::= primary
+         | factor EXP primary
+
+primary ::= number
+          | variable
+          | function_call
+          | LPAREN expression RPAREN
+          | ABS LPAREN expression RPAREN
+
+function_call ::= SIN LPAREN expression RPAREN
+                | COS LPAREN expression RPAREN
+
+number ::= INTEGER
+         | FLOAT
+         | PI
+         | EULER
+
+variable ::= IDENTIFIER
