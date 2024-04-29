@@ -18,6 +18,18 @@ NLESSER = '>=';
 ABS = '||';
 SIN = 'sin';
 COS = 'cos';
+FLOOR = 'floor';
+CEIL = 'ceil';
+
+// Stałe matematyczne
+PI = 'pi';
+EULER = 'e';
+
+// Nawiasy
+LPAREN = '(';
+RPAREN = ')';
+LBRAC = '[';
+RBRAC = ']';
 
 
 
