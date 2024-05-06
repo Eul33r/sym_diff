@@ -20,6 +20,8 @@ SIN = 'sin';
 COS = 'cos';
 FLOOR = 'floor';
 CEIL = 'ceil';
+EXPONENTIAL = 'exp';
+LN = 'ln';
 
 // Stałe matematyczne
 PI = 'pi';
