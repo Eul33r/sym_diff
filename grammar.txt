@@ -17,7 +17,9 @@ primary ::= number
          
 function_call ::= SIN LPAREN expression RPAREN
                 | COS LPAREN expression RPAREN
-                | ABS PIPE expression PIPE;
+                | ABS PIPE expression PIPE
+                | EXPONENTIAL LPAREN expression RPAREN
+                | LN LPAREN expression RPAREN
 
                 
 
