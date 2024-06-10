@@ -7,13 +7,20 @@ body {
     font-family: Arial, sans-serif;
 }
 
-form {
-    width: 300px;
+.container {
     text-align: center;
 }
 
+form {
+    width: 300px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 input[type="text"] {
-    width: 100%;
+    width: calc(100% - 10px); /* Szerokość pola tekstowego minus 10 pikseli na margines */
     box-sizing: border-box;
     padding: 10px;
     margin-bottom: 10px;
@@ -21,6 +28,17 @@ input[type="text"] {
     border: 1px solid #ccc;
     border-radius: 4px;
     outline: none;
+}
+
+input[type="submit"] {
+    width: 100px; /* Szerokość przycisku "Calculate" */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+    margin-left: 10px; /* Margines po lewej stronie przycisku */
 }
 
 #result {
