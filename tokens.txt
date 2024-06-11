@@ -37,6 +37,7 @@ RBRAC = ']';
 PIPE = '|';
 HYPHEN = '-';
 UNDERSCORE = '_';
+DIFF = 'd/dx';
 
 
 
