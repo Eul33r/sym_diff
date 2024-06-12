@@ -19,6 +19,7 @@ const TOKEN_TYPES = {
     LN: 'ln',
     PI: 'pi',
     EULER: 'e',
+    IMAGINARY_UNIT: 'i',
     LPAREN: '(',
     RPAREN: ')',
     INTEGER: 'integer',
@@ -127,7 +128,11 @@ class Tokenizer {
                 operatorType = TOKEN_TYPES.RPAREN;
                 break;
             default:
-                throw new Error(`Unknown operator: ${currentChar}`);
+                if (currentChar === '^') {
+                    operatorType = TOKEN_TYPES.EXP;
+                } else {
+                    throw new Error(`Unknown operator: ${currentChar}`);
+                }
         }
 
         this.position++;
@@ -172,25 +177,45 @@ class Parser {
             this.eat(TOKEN_TYPES.RPAREN); // Eat the right parenthesis
 
             // Calculate function value based on the function name
-            console.log(functionName);
-            let epsilon = 1e-15;
+            //console.log(functionName);
+            let epsilon = 1e-12;
             switch (functionName.toLowerCase()) {
+                /* FUNKCJE TRYGONOMETRYCZNE */
                 case 'sin':
-                    if (Math.abs(expressionValue - Math.PI) < epsilon || Math.abs(expressionValue + Math.PI) < epsilon) {
+                    const piMultiple = expressionValue / Math.PI;
+                    if (Math.abs(piMultiple - Math.round(piMultiple)) < epsilon) {
                         return 0;
                     }
                     else return Math.sin(expressionValue);
                 case 'cos':
-                    if (Math.abs(expressionValue) < epsilon) {
-                        return 1;
+                    const piOver2Multiple = expressionValue / (Math.PI / 2);
+                    if (Math.abs(piOver2Multiple - Math.round(piOver2Multiple)) < epsilon) {
+                        return 0;
+                    } else {
+                        return Math.cos(expressionValue);
                     }
-                    else return Math.cos(expressionValue);
+                case 'tan':
+                    const result = Math.cos(expressionValue);
+                    if (result === 0) {
+                        alert('Tangens podanego wyrażenia jest nieokreślony!');
+                    }
+                    else return Math.tan(expressionValue);
+                case 'cot':
+                    const result2 = Math.sin(expressionValue);
+                    if (result === 0) {
+                        alert('Cotangens podanego wyrażenia jest nieokreślony!');
+                    }
+                    else return 1 / Math.tan(expressionValue);
+                case 'csc':
+                    return 1 / Math.sin(expressionValue);
+                case 'sec':
+                    return 1 / Math.cos(expressionValue);
+                /* FUNKCJE TRYGONOMETRYCZNE END */
+
                 case 'exp':
                     return Math.exp(expressionValue);
                 case 'ln':
                     return Math.log(expressionValue);
-                case '||':
-                    return Math.abs(expressionValue);
                 case 'sqrt':
                     if (expressionValue < 0) {
                         /// Daj znać, że nie wolno wyciągać pierwiastka z liczby ujemnej!!
@@ -199,11 +224,53 @@ class Parser {
                     return Math.sqrt(expressionValue);
                 case 'cbrt':
                     return Math.cbrt(expressionValue);
+
+                /* FUNKCJE HIPERBOLICZNE */
+                case 'sinh':
+                    return Math.sinh(expressionValue);
+                case 'cosh':
+                    return Math.cosh(expressionValue);
+                case 'tanh':
+                    return Math.tanh(expressionValue);
+                case 'coth':
+                    return 1 / Math.tanh(expressionValue);
+                /* FUNKCJE HIPERBOLICZNE END*/
+
+                /* FUNKCJE CYKLOMETRYCZNE */
+                case 'arcsin':
+                    return Math.asin(expressionValue);
+                case 'arccos':
+                    return Math.acos(expressionValue);
+                case 'atan':
+                    return Math.atan(expressionValue);
+                case 'acot':
+                    return 1 / Math.atan(expressionValue);
+
+                /* FUNKCJE CYKLOMETRYCZNE END */
+
+                /* INNE FUNKCJE SPECJALNE */
+                case 'binomial':
+                // oblicz n po k
+                case '||':
+                    return Math.abs(expressionValue);
                 case 'floor':
                     return Math.floor(expressionValue);
                 case 'ceil':
                     return Math.ceil(expressionValue);
-                
+                case 'fracpart':
+                    return expressionValue - Math.floor(expressionValue);
+                case 'trunc':
+                    return Math.trunc(expressionValue);
+                case 'max':
+                    return Math.max(expressionValue);
+                case 'min':
+                    return Math.min(expressionValue);
+                case 'round':
+                    return Math.round(expressionValue);
+                case 'sgn':
+                    return Math.sign(expressionValue);
+                /* INNE FUNKCJE SPECJALNE END */
+
                 default:
                     throw new Error(`Unknown function: ${functionName}`);
             }
@@ -224,7 +291,7 @@ class Parser {
     term() {
         let result = this.factor();
 
-        while ([TOKEN_TYPES.MUL, TOKEN_TYPES.DIV, TOKEN_TYPES.MOD].includes(this.currentToken.type)) {
+        while ([TOKEN_TYPES.MUL, TOKEN_TYPES.DIV, TOKEN_TYPES.MOD, TOKEN_TYPES.EXP].includes(this.currentToken.type)) {
             const currentToken = this.currentToken;
 
             if (currentToken.type === TOKEN_TYPES.MUL) {
@@ -232,11 +299,31 @@ class Parser {
                 result *= this.factor();
             } else if (currentToken.type === TOKEN_TYPES.DIV) {
                 this.eat(TOKEN_TYPES.DIV); // Eat the division sign
+                if (result === 0 && this.factor() === 0) {
+                    alert('Wyrażenie 0/0 jest nieoznaczone!')
+                }
+                if (this.factor() === 0) {
+                    alert('Nie wolno dzielić przez zero!')
+                }
                 result /= this.factor();
             } else if (currentToken.type === TOKEN_TYPES.MOD) {
                 this.eat(TOKEN_TYPES.MOD); // Eat the modulo sign
                 result %= this.factor();
+            } else if (currentToken.type === TOKEN_TYPES.EXP) {
+                this.eat(TOKEN_TYPES.EXP);
+                const exponent = this.factor(); // Parse the exponent
+                if (result === 0 && exponent === 0) {
+                    alert('Wyrażenie 0^0 jest nieoznaczone!');
+                    return NaN; // Return NaN for indeterminate form
+                } else if (result === 0 && exponent === -1) {
+                    alert('Odwrotność liczby 0 nie istnieje!')
+                }
+                else {
+                    result = Math.pow(result, exponent);
+                }
             }
+
+
         }
 
         return result;
