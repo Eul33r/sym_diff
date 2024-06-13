@@ -30,7 +30,7 @@ input[type="text"] {
     outline: none;
 }
 
-input[type="submit"] {
+button[type="button"] {
     width: 100px; /* Szerokość przycisku "Calculate" */
     padding: 10px;
     font-size: 16px;
