@@ -29,6 +29,23 @@ const TOKEN_TYPES = {
     EOF: 'eof',
 };
 
+function factorial(n) {
+    if (n === 0 || n === 1) {
+        return 1;
+    } else {
+        let result = 1;
+        for (let i = 2; i <= n; i++) {
+            result *= i;
+        }
+        return result;
+    }
+}
+
+function binomial(n, k) {
+    if (k === 0) return 1;
+    return (n * binomial(n - 1, k - 1)) / k;
+}
+
 // Klasa tokena
 class Token {
     constructor(type, value) {
@@ -177,16 +194,14 @@ class Parser {
             this.eat(TOKEN_TYPES.RPAREN); // Eat the right parenthesis
 
             // Calculate function value based on the function name
-            //console.log(functionName);
-            let epsilon = 1e-12;
+            const epsilon = 1e-12;
             switch (functionName.toLowerCase()) {
                 /* FUNKCJE TRYGONOMETRYCZNE */
                 case 'sin':
                     const piMultiple = expressionValue / Math.PI;
                     if (Math.abs(piMultiple - Math.round(piMultiple)) < epsilon) {
                         return 0;
-                    }
-                    else return Math.sin(expressionValue);
+                    } else return Math.sin(expressionValue);
                 case 'cos':
                     const piOver2Multiple = expressionValue / (Math.PI / 2);
                     if (Math.abs(piOver2Multiple - Math.round(piOver2Multiple)) < epsilon) {
@@ -195,17 +210,9 @@ class Parser {
                         return Math.cos(expressionValue);
                     }
                 case 'tan':
-                    const result = Math.cos(expressionValue);
-                    if (result === 0) {
-                        alert('Tangens podanego wyrażenia jest nieokreślony!');
-                    }
-                    else return Math.tan(expressionValue);
+                    return Math.tan(expressionValue);
                 case 'cot':
-                    const result2 = Math.sin(expressionValue);
-                    if (result === 0) {
-                        alert('Cotangens podanego wyrażenia jest nieokreślony!');
-                    }
-                    else return 1 / Math.tan(expressionValue);
+                    return 1 / Math.tan(expressionValue);
                 case 'csc':
                     return 1 / Math.sin(expressionValue);
                 case 'sec':
@@ -218,8 +225,8 @@ class Parser {
                     return Math.log(expressionValue);
                 case 'sqrt':
                     if (expressionValue < 0) {
-                        /// Daj znać, że nie wolno wyciągać pierwiastka z liczby ujemnej!!
-                        alert('Nie wolno wyciągać pierwiastka kwadratowego z ujemnej liczby!');
+                        alert('Nie wolno wyciągać pierwiastka kwadratowego z liczby ujemnej!');
+                        throw new Error('Nie wolno wyciągać pierwiastka kwadratowego z liczby ujemnej!');
                     }
                     return Math.sqrt(expressionValue);
                 case 'cbrt':
@@ -241,11 +248,10 @@ class Parser {
                     return Math.asin(expressionValue);
                 case 'arccos':
                     return Math.acos(expressionValue);
-                case 'atan':
+                case 'arctan':
                     return Math.atan(expressionValue);
-                case 'acot':
+                case 'arccot':
                     return 1 / Math.atan(expressionValue);
-
                 /* FUNKCJE CYKLOMETRYCZNE END */
 
                 /* INNE FUNKCJE SPECJALNE */
@@ -286,6 +292,7 @@ class Parser {
             throw new Error(`Unexpected token: ${currentToken.type}`);
         }
     }
+
 
 
     term() {
